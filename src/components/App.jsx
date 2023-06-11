@@ -23,20 +23,14 @@ export const App = () => {
     if (inputForSearch.value.trim() === '') return;
     
     setIsLoading(true);
-    const response = await fetchImages(inputForSearch.value, 1);  
-    setImages(response);
     setCurrentSearch(inputForSearch.value);
     setPage(1);
-    setIsLoading(false);
     evt.target.elements.inputForSearch.value = "";
   };
 
   const handleClickMore = async () => {
     setIsLoading(true);
-    const response = await fetchImages(currentSearch, page + 1);
-    setImages([...images, ...response]);
-    setPage(page + 1);    
-    setIsLoading(false);
+    setPage(page + 1);
   };
 
   const handleImageClick = evt => {
@@ -61,6 +55,19 @@ export const App = () => {
 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    if (currentSearch.trim() === '' || !isLoading) return;
+    (async () => {
+      const response = await fetchImages(currentSearch, page);
+      if (page > 1) {
+        setImages([...images, ...response]);
+      } else {
+        setImages(response);
+      };
+      setIsLoading(false);
+    })();
+  });
 
   useEffect(() => {
     return () => localStorage.removeItem('totalHits');
