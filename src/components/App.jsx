@@ -56,17 +56,6 @@ export const App = () => {
   };
 
   useEffect(() => {
-    const handleKeyDown = evt => {
-      if (evt.code === 'Escape') {
-        handleModalClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  useEffect(() => {
     if (currentSearch === '' || !isLoading) return;
     (async () => {
       const response = await fetchImages(currentSearch, page);
