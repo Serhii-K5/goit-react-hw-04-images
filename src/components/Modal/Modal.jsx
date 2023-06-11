@@ -23,7 +23,7 @@ export const Modal = ({ src, alt, handleClose }) => {
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [handleClose]);
 
   return (
     <div className={css.Overlay} onClick={handleClose}>
