@@ -17,18 +17,28 @@ export const App = () => {
   const [modalImg, setModalImg] = useState('');
   const [modalAlt, setModalAlt] = useState('');
   
-  const handleSubmit = async evt => {
-    evt.preventDefault();
-    const inputForSearch = evt.target.elements.inputForSearch;
-    if (inputForSearch.value.trim() === '') return;
+  // Для варіанта з некерованою формою в Searchbar
+  // const handleSubmit = evt => {
+  //   evt.preventDefault();
+  //   const inputForSearch = evt.target.elements.inputForSearch;
+  //   if (inputForSearch.value.trim() === '') return;
+    
+  //   setIsLoading(true);
+  //   setCurrentSearch(inputForSearch.value.trim());
+  //   setPage(1);
+  //   evt.target.elements.inputForSearch.value = "";
+  // };
+
+  // Для варіанта з керованою формою в Searchbar
+  const handleSubmit = inputForSearch => {
+    if (inputForSearch.trim() === '') return;
     
     setIsLoading(true);
-    setCurrentSearch(inputForSearch.value);
+    setCurrentSearch(inputForSearch.trim());
     setPage(1);
-    evt.target.elements.inputForSearch.value = "";
   };
 
-  const handleClickMore = async () => {
+  const handleClickMore = () => {
     setIsLoading(true);
     setPage(page + 1);
   };
@@ -57,7 +67,7 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
-    if (currentSearch.trim() === '' || !isLoading) return;
+    if (currentSearch === '' || !isLoading) return;
     (async () => {
       const response = await fetchImages(currentSearch, page);
       if (page > 1) {
