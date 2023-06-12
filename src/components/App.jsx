@@ -16,6 +16,7 @@ export const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImg, setModalImg] = useState('');
   const [modalAlt, setModalAlt] = useState('');
+  const [isShowButton, setIsShowButton] = useState(false);  
   
   // Для варіанта з некерованою формою в Searchbar
   // const handleSubmit = evt => {
@@ -57,20 +58,19 @@ export const App = () => {
 
   useEffect(() => {
     if (currentSearch === '' || !isLoading) return;
+
     (async () => {
-      const response = await fetchImages(currentSearch, page);
+      const response= await fetchImages(currentSearch, page);
       if (page > 1) {
-        setImages([...images, ...response]);
+        setImages([...images, ...response.result]);
       } else {
-        setImages(response);
+        setImages(response.result);
       };
+      
+      setIsShowButton(Math.ceil(response.totalHits / response.PER_PAGE) > page);
       setIsLoading(false);
     })();
   });
-
-  useEffect(() => {
-    return () => localStorage.removeItem('totalHits');
-  }, []);
 
   return (
     <div className={cssApp.App}>
@@ -85,11 +85,7 @@ export const App = () => {
             onImageClick={handleImageClick}
             images={images}
           />
-          {images.length > 0 &&
-              Math.ceil(localStorage.getItem('totalHits') / 12) > page ? (
-            <Button onClick={handleClickMore} />
-          ) : null} 
-            {/* <p>Сторінка {this.state.page} з {Math.ceil(localStorage.getItem('totalHits') / 12)} </p> */}
+          {isShowButton ? <Button onClick={handleClickMore} /> : null}
         </React.Fragment>
       )}
       {isModalOpen ? (
